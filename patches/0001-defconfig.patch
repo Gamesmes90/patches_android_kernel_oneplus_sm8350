@@ -1,0 +1,50 @@
+From 7f15cedc0ebf4e93d8665bf034ced1430be75973 Mon Sep 17 00:00:00 2001
+From: Gamesmes90 <gamesmes90@gmail.com>
+Date: Tue, 13 Oct 2026 19:04:44 +0200
+Subject: [PATCH] defconfig
+
+---
+ .../configs/vendor/lahaina-qgki_defconfig     | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+
+index 44b37a247f0a..ef7065ab4f76 100644
+diff --git a/arch/arm64/configs/vendor/lahaina-qgki_defconfig b/arch/arm64/configs/vendor/lahaina-qgki_defconfig
+--- a/arch/arm64/configs/vendor/lahaina-qgki_defconfig
++++ b/arch/arm64/configs/vendor/lahaina-qgki_defconfig
+@@ -982,3 +982,33 @@ CONFIG_CORESIGHT_HWEVENT=y
+ CONFIG_CORESIGHT_DUMMY=y
+ CONFIG_CORESIGHT_REMOTE_ETM=y
+ CONFIG_CORESIGHT_TGU=y
++
++# BakaSU
++CONFIG_KSU=y
++CONFIG_KSU_SUSFS=y
++
++# Network
++CONFIG_TCP_CONG_ADVANCED=y
++CONFIG_TCP_CONG_CUBIC=y
++CONFIG_TCP_CONG_BBR=y
++CONFIG_DEFAULT_BBR=y
++CONFIG_DEFAULT_TCP_CONG="bbr"
++CONFIG_NET_SCH_FQ=y
++CONFIG_NET_SCH_DEFAULT=y
++CONFIG_DEFAULT_FQ=y
++CONFIG_NET_SCH_FQ_CODEL=y
++CONFIG_VMAP_STACK=y
++CONFIG_NET_SOCK_MSG=y
++
++# CPU
++CONFIG_UCLAMP_BUCKETS_COUNT=20
++CONFIG_PM_OPP=y
++CONFIG_SCHED_BORE=y
++CONFIG_HZ_250=y
++CONFIG_HZ=250
++
++# Ram
++CONFIG_CRYPTO_LZO=y
++CONFIG_LZO_COMPRESS=y
++CONFIG_LZO_DECOMPRESS=y
++
+-- 
+2.56.0
+
