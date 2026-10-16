@@ -27,6 +27,9 @@ err() { printf '%b%s%b\n' "$RED" "$1" "$RESET" >&2; }
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${1:-}"
+GIT="${2:-}"
+
+echo $GIT
 
 cd "$SCRIPT_DIR"
 
@@ -36,6 +39,12 @@ if [ -z "$REPO_ROOT" ]; then
     exit 1
 fi
 
+if [ -z "$GIT" ]; then
+    warn "[WARNING] Missing nogit argument, all changes will be commited."
+elif [ "$GIT" = "nogit" ]; then
+    info "Detected nogit argument, changes won't be commited."
+fi
+
 echo
 printf '%b=======================================================%b\n' "$CYAN" "$RESET"
 printf '%b  Kernel Repository: %s%b\n' "$BOLD" "$REPO_ROOT" "$RESET"
@@ -43,7 +52,7 @@ printf '%b=======================================================%b\n' "$CYAN" "
 echo
 
 info "[1/3] Applying patches..."
-if ! bash scripts/apply_patches.sh "$REPO_ROOT"; then
+if ! bash scripts/apply_patches.sh "$REPO_ROOT" "$GIT"; then
     err "[ERROR] Failed to apply patches."
     exit 1
 fi
@@ -51,7 +60,7 @@ ok "  ✓ Patches applied successfully."
 
 echo
 info "[2/3] Initializing BakaSU..."
-if ! bash scripts/init_bakasu.sh "$REPO_ROOT"; then
+if ! bash scripts/init_bakasu.sh "$REPO_ROOT" "$GIT"; then
     err "[ERROR] Failed to initialize BakaSU."
     exit 1
 fi
@@ -59,7 +68,7 @@ ok "  ✓ BakaSU initialized successfully."
 
 echo
 info "[3/3] Applying SUSFS Inline Hook..."
-if ! bash scripts/susfs_inline_hook_patch.sh "$REPO_ROOT"; then
+if ! bash scripts/susfs_inline_hook_patch.sh "$REPO_ROOT" "$GIT"; then
     err "[ERROR] Failed to apply SUSFS Inline Hook."
     exit 1
 fi

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 REPO_ROOT="${1:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
+GIT="${2:-}"
 
 cd $REPO_ROOT
 
@@ -10,7 +11,9 @@ bash susfs_inline_hook_patches.sh
 
 rm susfs_inline_hook_patches.sh
 
-git add .
-git restore --staged drivers/kernelsu
-git restore --staged KernelSU
-git commit -m "SUSFS Inline Hook"
+if [ -z "$GIT" ]; then
+    git add .
+    git restore --staged drivers/kernelsu
+    git restore --staged KernelSU
+    git commit -m "SUSFS Inline Hook"
+fi
