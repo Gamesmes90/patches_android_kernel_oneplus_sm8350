@@ -51,7 +51,7 @@ printf '%b  Kernel Repository: %s%b\n' "$BOLD" "$REPO_ROOT" "$RESET"
 printf '%b=======================================================%b\n' "$CYAN" "$RESET"
 echo
 
-info "[1/3] Applying patches..."
+info "[1/4] Applying patches..."
 if ! bash scripts/apply_patches.sh "$REPO_ROOT" "$GIT"; then
     err "[ERROR] Failed to apply patches."
     exit 1
@@ -59,7 +59,7 @@ fi
 ok "  ✓ Patches applied successfully."
 
 echo
-info "[2/3] Initializing BakaSU..."
+info "[2/4] Initializing BakaSU..."
 if ! bash scripts/init_bakasu.sh "$REPO_ROOT" "$GIT"; then
     err "[ERROR] Failed to initialize BakaSU."
     exit 1
@@ -67,12 +67,20 @@ fi
 ok "  ✓ BakaSU initialized successfully."
 
 echo
-info "[3/3] Applying SUSFS Inline Hook..."
+info "[3/4] Applying SUSFS Inline Hook..."
 if ! bash scripts/susfs_inline_hook_patch.sh "$REPO_ROOT" "$GIT"; then
     err "[ERROR] Failed to apply SUSFS Inline Hook."
     exit 1
 fi
 ok "  ✓ SUSFS Inline Hook applied successfully."
+
+echo
+info "[4/4] Applying SUSFS Patch..."
+if ! bash scripts/susfs_patch.sh "$REPO_ROOT" "$GIT"; then
+    err "[ERROR] Failed to apply SUSFS Patch."
+    exit 1
+fi
+ok "  ✓ SUSFS Patch applied successfully."
 
 echo
 ok "[OK] All steps completed successfully."
