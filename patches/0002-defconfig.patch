@@ -11,7 +11,7 @@ index 44b37a247f0a..ef7065ab4f76 100644
 diff --git a/arch/arm64/configs/vendor/lahaina-qgki_defconfig b/arch/arm64/configs/vendor/lahaina-qgki_defconfig
 --- a/arch/arm64/configs/vendor/lahaina-qgki_defconfig
 +++ b/arch/arm64/configs/vendor/lahaina-qgki_defconfig
-@@ -982,3 +982,33 @@ CONFIG_CORESIGHT_HWEVENT=y
+@@ -982,3 +982,44 @@ CONFIG_CORESIGHT_HWEVENT=y
  CONFIG_CORESIGHT_DUMMY=y
  CONFIG_CORESIGHT_REMOTE_ETM=y
  CONFIG_CORESIGHT_TGU=y
@@ -19,6 +19,17 @@ diff --git a/arch/arm64/configs/vendor/lahaina-qgki_defconfig b/arch/arm64/confi
 +# BakaSU
 +CONFIG_KSU=y
 +CONFIG_KSU_SUSFS=y
++
++# SUSFS
++CONFIG_KSU_SUSFS_SUS_PATH=y
++CONFIG_KSU_SUSFS_SUS_MOUNT=y
++CONFIG_KSU_SUSFS_SUS_KSTAT=y
++CONFIG_KSU_SUSFS_SPOOF_UNAME=y
++CONFIG_KSU_SUSFS_ENABLE_LOG=y
++CONFIG_KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS=y
++CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG=y
++CONFIG_KSU_SUSFS_OPEN_REDIRECT=y
++CONFIG_KSU_SUSFS_SUS_MAP=y
 +
 +# Network
 +CONFIG_TCP_CONG_ADVANCED=y
@@ -47,4 +58,3 @@ diff --git a/arch/arm64/configs/vendor/lahaina-qgki_defconfig b/arch/arm64/confi
 +
 -- 
 2.56.0
-
