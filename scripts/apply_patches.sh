@@ -12,7 +12,7 @@ fi
 
 cd "$REPO_ROOT"
 
-find "$PATCHES_DIR" -type f \( -iname "*.patch" -o -iname "*.diff" \) | sort | while IFS= read -r patch; do
+find "$PATCHES_DIR" -type f \( -iname "*.patch" -o -iname "*.diff" \) | sort -V | while IFS= read -r patch; do
     echo "Applying: $(basename "$patch")"
     git apply --check --whitespace=nowarn < "$patch" || {
         echo "Patch failed validation: $patch" >&2
