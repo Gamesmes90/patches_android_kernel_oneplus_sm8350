@@ -15,9 +15,19 @@ cd $REPO_ROOT
 # Check if wiggle is installed
 command -v wiggle >/dev/null || { echo "ERROR: wiggle not installed" >&2; exit 1; }
 
-# Download patch from HEAD
+PATCH_HASH_URL="https://raw.githubusercontent.com/Gamesmes90/android_kernel_oneplus_sm8350/refs/heads/android-17/scripts/susfs/patch_hash"
+
+# Allow an override from the environment, otherwise read the pinned hash
+PATCH_REF="${PATCH_REF:-$(curl -fsSL "$PATCH_HASH_URL" | tr -d '[:space:]')}"
+
+if ! [[ "$PATCH_REF" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "ERROR: invalid patch hash: '$PATCH_REF'" >&2
+  exit 1
+fi
+
+echo "Using SUSFS patch at commit $PATCH_REF"
 curl -fsSL -o "$PATCH_FILE" \
-    https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/refs/heads/mainline/Patches/Patch/$PATCH_FILE
+  "https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/${PATCH_REF}/Patches/Patch/${PATCH_FILE}"
 
 # Apply the patch
 git apply --reject --whitespace=fix $PATCH_FILE || echo "WARNING: git apply left rejects, merging with wiggle"
