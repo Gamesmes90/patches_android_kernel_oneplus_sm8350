@@ -12,36 +12,32 @@ GIT="${2:-}"
 
 cd $REPO_ROOT
 
+# Check if wiggle is installed
+command -v wiggle >/dev/null || { echo "ERROR: wiggle not installed" >&2; exit 1; }
+
 # Download patch from HEAD
-curl -O https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/refs/heads/mainline/Patches/Patch/$PATCH_FILE
+curl -fsSL -o "$PATCH_FILE" \
+    https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/refs/heads/mainline/Patches/Patch/$PATCH_FILE
 
 # Apply the patch
-git apply --reject --whitespace=fix $PATCH_FILE || true
+git apply --reject --whitespace=fix $PATCH_FILE || echo "WARNING: git apply left rejects, merging with wiggle"
 
 # Check for rej files and merge them
-rejs_found=0
+failed=0
 while IFS= read -r -d '' rej; do
-    rejs_found=1
-    orig="${rej%.rej}"
-    echo "Found reject file. Running wiggle on: $orig"
-    
-    if [ -f "$orig" ]; then
-        if wiggle --replace "$orig" "$rej"; then
-            echo "   Wiggle merged $orig successfully"
-            rm -f "$rej" "$orig.porig"
-        else
-            echo "   Wiggle failed to merge $orig"
-            rm -f "$orig.porig"
-        fi
-    else
-        echo "   Error: The original file $orig for $rej does not exist"
-    fi
-done < <(find . -type f -name "*.rej" -print0)
+  orig="${rej%.rej}"
+  echo "Found reject file. Running wiggle on: $orig"
+  if [ -f "$orig" ] && wiggle --replace "$orig" "$rej"; then
+    echo "   Wiggle merged $orig successfully"
+    rm -f "$rej" "$orig.porig"
+  else
+    echo "   ERROR: could not merge $orig" >&2
+    failed=1
+  fi
+done < <(find . -type f -name '*.rej' -print0)
 
-# Output if no rej files are found
-if [ "$rejs_found" -eq 0 ]; then
-    echo "No .rej files found (the patch has been 100% applied or it failed from the start)."
-fi
+# Fail if merge failed
+[ "$failed" -eq 0 ] || exit 1
 
 if [ -z "$GIT" ]; then
     # Commit
